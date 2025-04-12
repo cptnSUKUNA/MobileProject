@@ -1,39 +1,84 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+/** @format */
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Stack } from "expo-router";
+import { useColorScheme } from "react-native";
+import { theme } from "./theme";
+import { I18nManager } from "react-native";
+import { useEffect } from "react";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// Force RTL layout
+I18nManager.forceRTL(true);
+I18nManager.allowRTL(true);
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+export default function Layout() {
+	const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+	useEffect(() => {
+		// Ensure RTL is enabled
+		I18nManager.forceRTL(true);
+		I18nManager.allowRTL(true);
+	}, []);
 
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+	return (
+		<Stack
+			screenOptions={{
+				headerStyle: {
+					backgroundColor: theme.colors.background,
+				},
+				headerTintColor: theme.colors.text,
+				headerTitleStyle: {
+					fontFamily: theme.typography.h1.fontFamily,
+					fontWeight: theme.typography.h1.fontWeight,
+				},
+				headerBackTitle: "رجوع",
+				headerBackTitleStyle: {
+					fontFamily: theme.typography.body.fontFamily,
+				},
+			}}>
+			<Stack.Screen
+				name='index'
+				options={{
+					title: "تطبيق الحرف اليدوية",
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name='role-selection'
+				options={{
+					title: "اختر دورك",
+					headerShown: false,
+				}}
+			/>
+			<Stack.Screen
+				name='(buyer)/home'
+				options={{
+					title: "الرئيسية",
+				}}
+			/>
+			<Stack.Screen
+				name='(buyer)/product-details'
+				options={{
+					title: "تفاصيل المنتج",
+				}}
+			/>
+			<Stack.Screen
+				name='(seller)/home'
+				options={{
+					title: "الرئيسية",
+				}}
+			/>
+			<Stack.Screen
+				name='(seller)/add-product'
+				options={{
+					title: "إضافة منتج",
+				}}
+			/>
+			<Stack.Screen
+				name='(seller)/product-details'
+				options={{
+					title: "تفاصيل المنتج",
+				}}
+			/>
+		</Stack>
+	);
 }
