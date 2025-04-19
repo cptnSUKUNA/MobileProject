@@ -140,7 +140,7 @@ const categories: Category[] = [
 // Static most selling products
 const staticMostSellingProducts: Product[] = [
 	{
-		id: "1",
+		id: "p1",
 		name: "سجادة يدوية",
 		price: "250",
 		image: "https://i.postimg.cc/9f20fMNq/main.jpg",
@@ -159,7 +159,7 @@ const staticMostSellingProducts: Product[] = [
 		shippingCost: "50 جنيه",
 	},
 	{
-		id: "2",
+		id: "p2",
 		name: "مزهرية خزفية",
 		price: "180",
 		image: "https://i.postimg.cc/9f20fMNq/main.jpg",
@@ -178,7 +178,7 @@ const staticMostSellingProducts: Product[] = [
 		shippingCost: "30 جنيه",
 	},
 	{
-		id: "3",
+		id: "p3",
 		name: "طاولة خشبية",
 		price: "350",
 		image: "https://i.postimg.cc/9f20fMNq/main.jpg",
@@ -197,7 +197,7 @@ const staticMostSellingProducts: Product[] = [
 		shippingCost: "70 جنيه",
 	},
 	{
-		id: "4",
+		id: "p4",
 		name: "شمعدان نحاسي",
 		price: "120",
 		image: "https://i.postimg.cc/9f20fMNq/main.jpg",
@@ -218,7 +218,7 @@ const staticMostSellingProducts: Product[] = [
 ];
 
 // Static products for each category
-const staticProducts: Product[] = [
+export const staticProducts: Product[] = [
 	// Pottery products (الخزف)
 	{
 		id: "p1",
@@ -459,7 +459,6 @@ const staticProducts: Product[] = [
 export default function BuyerHome() {
 	const router = useRouter();
 	const [products, setProducts] = useState<Product[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 	const [isNavigating, setIsNavigating] = useState(false);
 
@@ -480,9 +479,8 @@ export default function BuyerHome() {
 			console.error("Error loading products:", error);
 			// Fallback to static products on error
 			setProducts(staticProducts);
-		} finally {
-			setLoading(false);
 		}
+	
 	};
 
 	const handleCategorySelect = (categoryName: string) => {
@@ -502,17 +500,6 @@ export default function BuyerHome() {
 		? products.filter((product) => product.category === selectedCategory)
 		: products;
 
-	if (loading) {
-		return (
-			<View
-				style={[
-					styles.container as ViewStyle,
-					{ backgroundColor: theme.colors.background },
-				]}>
-				<ActivityIndicator size='large' color={theme.colors.primary} />
-			</View>
-		);
-	}
 
 	return (
 		<View style={styles.container}>
@@ -542,12 +529,15 @@ export default function BuyerHome() {
 						horizontal
 						showsHorizontalScrollIndicator={false}
 						contentContainerStyle={styles.horizontalScroll}>
+							
 						{staticMostSellingProducts.map((product) => (
+							
 							<ProductCard
 								key={product.id}
 								product={product}
 								onPress={() => handleProductPress(product.id)}
 							/>
+
 						))}
 					</ScrollView>
 				</View>
@@ -629,25 +619,7 @@ export default function BuyerHome() {
 				</View>
 			</ScrollView>
 
-			{/* Navigation Loading Overlay */}
-			<Modal
-				visible={isNavigating}
-				transparent
-				animationType='fade'
-				onRequestClose={() => setIsNavigating(false)}>
-				<View style={styles.loadingOverlay as ViewStyle}>
-					<View style={styles.loadingContainer as ViewStyle}>
-						<ActivityIndicator size='large' color={theme.colors.primary} />
-						<Text
-							style={[
-								styles.loadingText as TextStyle,
-								{ color: theme.colors.text },
-							]}>
-							جاري التحميل...
-						</Text>
-					</View>
-				</View>
-			</Modal>
+			
 		</View>
 	);
 }

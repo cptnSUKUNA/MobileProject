@@ -16,6 +16,7 @@ import {
 import { theme } from "../theme";
 import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { staticProducts } from "./home";
 
 interface Product {
 	id: string;
@@ -42,8 +43,8 @@ interface CartItem extends Product {
 
 export default function BuyerProductDetails() {
 	const { id } = useLocalSearchParams();
+	console.log(id)
 	const [product, setProduct] = useState<Product | null>(null);
-	const [loading, setLoading] = useState(true);
 	const [isFavorite, setIsFavorite] = useState(false);
 	const [isInCart, setIsInCart] = useState(false);
 
@@ -54,24 +55,16 @@ export default function BuyerProductDetails() {
 	}, [id]);
 
 	const loadProduct = async () => {
-		try {
-			console.log("Loading product with ID:", id);
-			const storedProducts = await AsyncStorage.getItem("sellerProducts");
-			console.log("Stored products:", storedProducts);
+		const products = JSON.parse(localStorage.getItem("sellerProducts") || "[]") as Product[];
+		console.log(products)
+		const foundProduct = products.find((p: Product) => p.id === id);
+		console.log(foundProduct)
+		if (foundProduct) {
 
-			if (storedProducts) {
-				const products = JSON.parse(storedProducts);
-				const foundProduct = products.find((p: Product) => p.id === id);
-				console.log("Found product:", foundProduct);
-				setProduct(foundProduct || null);
-			} else {
-				console.log("No products found in storage");
-			}
-		} catch (error) {
-			console.error("Error loading product:", error);
-			Alert.alert("خطأ", "حدث خطأ أثناء تحميل المنتج");
-		} finally {
-			setLoading(false);
+			setProduct(foundProduct);
+		
+		} else {
+			Alert.alert("خطأ", "المنتج غير موجود");
 		}
 	};
 
@@ -135,13 +128,7 @@ export default function BuyerProductDetails() {
 		}
 	};
 
-	if (loading) {
-		return (
-			<View style={styles.container}>
-				<Text>جاري التحميل...</Text>
-			</View>
-		);
-	}
+
 
 	if (!product) {
 		return (

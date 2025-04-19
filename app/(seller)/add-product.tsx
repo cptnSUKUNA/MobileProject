@@ -91,6 +91,7 @@ export default function AddProduct() {
 
 			const storedProducts = await AsyncStorage.getItem("sellerProducts");
 			const products = storedProducts ? JSON.parse(storedProducts) : [];
+			const lastproduct = products[products.length - 1];
 			products.push(newProduct);
 			await AsyncStorage.setItem("sellerProducts", JSON.stringify(products));
 

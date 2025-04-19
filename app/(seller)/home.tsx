@@ -71,7 +71,6 @@ const ProductCard = ({
 export default function SellerHome() {
 	const router = useRouter();
 	const [products, setProducts] = useState<Product[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [isNavigating, setIsNavigating] = useState(false);
 
 	useEffect(() => {
@@ -87,7 +86,6 @@ export default function SellerHome() {
 		} catch (error) {
 			console.error("Error loading products:", error);
 		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -96,17 +94,6 @@ export default function SellerHome() {
 		router.push(`/(seller)/product-details?id=${productId}`);
 	};
 
-	if (loading) {
-		return (
-			<View
-				style={[
-					styles.container as ViewStyle,
-					{ backgroundColor: theme.colors.background },
-				]}>
-				<ActivityIndicator size='large' color={theme.colors.primary} />
-			</View>
-		);
-	}
 
 	return (
 		<>
@@ -160,25 +147,7 @@ export default function SellerHome() {
 				)}
 			</ScrollView>
 
-			{/* Navigation Loading Overlay */}
-			<Modal
-				visible={isNavigating}
-				transparent
-				animationType='fade'
-				onRequestClose={() => setIsNavigating(false)}>
-				<View style={styles.loadingOverlay as ViewStyle}>
-					<View style={styles.loadingContainer as ViewStyle}>
-						<ActivityIndicator size='large' color={theme.colors.primary} />
-						<Text
-							style={[
-								styles.loadingText as TextStyle,
-								{ color: theme.colors.text },
-							]}>
-							جاري التحميل...
-						</Text>
-					</View>
-				</View>
-			</Modal>
+			
 		</>
 	);
 }

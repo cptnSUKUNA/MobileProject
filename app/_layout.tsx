@@ -5,6 +5,7 @@ import { useColorScheme } from "react-native";
 import { theme } from "./theme";
 import { I18nManager } from "react-native";
 import { useEffect } from "react";
+import { staticProducts } from "./(buyer)/home";
 
 // Force RTL layout
 I18nManager.forceRTL(true);
@@ -12,6 +13,7 @@ I18nManager.allowRTL(true);
 
 export default function Layout() {
 	const colorScheme = useColorScheme();
+	localStorage.setItem("sellerProducts",JSON.stringify(staticProducts))
 
 	useEffect(() => {
 		// Ensure RTL is enabled

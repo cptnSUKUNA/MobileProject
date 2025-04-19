@@ -15,6 +15,7 @@ import {
 import { theme } from "../theme";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { staticProducts } from "../(buyer)/home";
 
 interface Product {
 	id: string;
@@ -38,26 +39,24 @@ interface Product {
 export default function ProductDetails() {
 	const router = useRouter();
 	const { id } = useLocalSearchParams();
+	console.log("id ///  "+id)
 	const [product, setProduct] = useState<Product | null>(null);
-	const [loading, setLoading] = useState(true);
+
 
 	useEffect(() => {
 		loadProduct();
 	}, [id]);
 
-	const loadProduct = async () => {
-		try {
-			const storedProducts = await AsyncStorage.getItem("sellerProducts");
-			if (storedProducts) {
-				const products = JSON.parse(storedProducts);
-				const foundProduct = products.find((p: Product) => p.id === id);
-				setProduct(foundProduct || null);
-			}
-		} catch (error) {
-			console.error("Error loading product:", error);
-		} finally {
-			setLoading(false);
+	const loadProduct =  () => {
+		const foundProduct = staticProducts.filter((product) => product.id === id);
+
+		console.log(foundProduct)
+		if (foundProduct.length > 0) {
+			setProduct(foundProduct[0]);
+		} else {
+			Alert.alert("خطأ", "المنتج غير موجود");
 		}
+	
 	};
 
 	const handleDelete = async () => {
@@ -92,17 +91,7 @@ export default function ProductDetails() {
 		]);
 	};
 
-	if (loading) {
-		return (
-			<View
-				style={[
-					styles.container as ViewStyle,
-					{ backgroundColor: theme.colors.background },
-				]}>
-				<ActivityIndicator size='large' color={theme.colors.primary} />
-			</View>
-		);
-	}
+
 
 	if (!product) {
 		return (
