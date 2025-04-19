@@ -48,7 +48,10 @@ export default function ProductDetails() {
 	}, [id]);
 
 	const loadProduct =  () => {
-		const foundProduct = staticProducts.filter((product) => product.id === id);
+
+		const products = JSON.parse(localStorage.getItem("sellerProducts") || "[]") as Product[];
+		
+		const foundProduct = products.filter((p: Product) => p.id === id);
 
 		console.log(foundProduct)
 		if (foundProduct.length > 0) {

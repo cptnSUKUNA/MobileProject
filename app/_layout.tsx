@@ -13,7 +13,7 @@ I18nManager.allowRTL(true);
 
 export default function Layout() {
 	const colorScheme = useColorScheme();
-	localStorage.setItem("sellerProducts",JSON.stringify(staticProducts))
+	localStorage.setItem("sellerProducts",JSON.stringify(staticProducts));
 
 	useEffect(() => {
 		// Ensure RTL is enabled
